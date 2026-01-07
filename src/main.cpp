@@ -12,11 +12,10 @@
 
 using namespace boost;
 
-int main(int argc, char *argv[])
+int main()
 {
     std::string paymentId = getenv("ORDER_ID") ? getenv("ORDER_ID") : "Bob";
     int amount            = atoi(getenv("AMOUNT") ? getenv("AMOUNT") : "2000");
-    for (int i = 0; i < argc; ++i) { printf("parameter %d: \"%s\"\n", i, argv[i]); }
 
     std::locale::global(std::locale("en_US.UTF-8"));
     try {
