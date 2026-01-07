@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статус платежа</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background-color: #1B1F27;
+            color: #cccccc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(20, 20, 40, 0.9);
+            border-radius: 16px;
+            border: 1px solid #2a2a5a;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 20, 0.5);
+        }
+
+        .header {
+            padding: 24px;
+            border-bottom: 1px solid #2a2a5a;
+            text-align: center;
+        }
+
+        .header.success {
+            background: linear-gradient(135deg, rgba(10, 60, 30, 0.3), rgba(20, 20, 40, 0.9));
+        }
+
+        .header.error {
+            background: linear-gradient(135deg, rgba(60, 20, 20, 0.3), rgba(20, 20, 40, 0.9));
+        }
+
+        .status-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .success .status-icon {
+            color: #4ade80;
+        }
+
+        .error .status-icon {
+            color: #f87171;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            background: linear-gradient(90deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-message {
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 32px 24px;
+        }
+
+        .info-card {
+            background: #242830FF;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #3a3a6a;
+            margin-bottom: 28px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a2a5a;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .value {
+            color: #e2e8f0;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .amount {
+            color: #4ade80;
+            font-size: 18px;
+        }
+
+        .id {
+            color: #60a5fa;
+            font-size: 15px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 32px;
+        }
+
+        .shop-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #213B44;
+            color: #66D9E8;
+            border: none;
+            padding: 16px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            min-width: 200px;
+        }
+
+        .shop-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .shop-button:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            padding: 20px 24px;
+            border-top: 1px solid #2a2a5a;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 12px;
+            }
+            
+            .content {
+                padding: 24px 16px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Страница успешной оплаты -->
+    <div class="container" id="successPage">
+        <div class="header success">
+            <div class="status-icon">✓</div>
+            <h1>Оплата успешно завершена</h1>
+            <p class="status-message">Спасибо за ваш заказ! Подробности транзакции ниже.</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-card">
+                <div class="info-row">
+                    <span class="label">Сумма оплаты:</span>
+                    <span class="value amount" id="successAmount">$amount</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">ID транзакции:</span>
+                    <span class="value id" id="successId">$user</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Статус:</span>
+                    <span class="value" style="color: #4ade80;">Успешно</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Дата и время:</span>
+                    <span class="value" id="successDate">07.01.2026 14:30</span>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <a href="$shop" class="shop-button">
+                    ← Вернуться в магазин
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Если у вас есть вопросы, обратитесь в <a href="$support">службу поддержки</a></p>
+        </div>
+    </div>
+
+    <!-- Страница неуспешной оплаты -->
+    <div class="container" id="errorPage" style="display: none;">
+        <div class="header error">
+            <div class="status-icon">✕</div>
+            <h1>Оплата не прошла</h1>
+            <p class="status-message">Во время обработки платежа произошла ошибка.</p>
+        </div>
+        
+        <div class="content">
+            <div class="info-card">
+                <div class="info-row">
+                    <span class="label">Сумма платежа:</span>
+                    <span class="value amount" id="errorAmount">$amount</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">ID транзакции:</span>
+                    <span class="value id" id="errorId">TXN-E5F6A7B8C9</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Статус:</span>
+                    <span class="value" style="color: #f87171;">Неуспешно</span>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <a href="$shop" class="shop-button">
+                    ← Вернуться в магазин
+                </a>
+            </div>
+            
+        </div>
+        
+        <div class="footer">
+            <p>Попробуйте использовать другой способ оплаты или обратитесь в <a href="$support">службу поддержки</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Данные для отображения (обычно приходят с сервера)
+        const transactionData = {
+            success: {
+                amount: "$amount",
+                id: "$user",
+                date: new Date().toLocaleDateString('ru-RU') + ' ' + new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+            },
+            error: {
+                amount: "$amount",
+                id: "$user",
+                date: new Date().toLocaleDateString('ru-RU') + ' ' + new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
+            }
+        };
+
+        // Функция для отображения страницы успешной/неуспешной оплаты
+        function showPage(isSuccess) {
+            const successPage = document.getElementById('successPage');
+            const errorPage = document.getElementById('errorPage');
+            
+            if (isSuccess) {
+                successPage.style.display = 'block';
+                errorPage.style.display = 'none';
+                
+                // Заполняем данные для успешной страницы
+                document.getElementById('successAmount').textContent = transactionData.success.amount;
+                document.getElementById('successId').textContent = transactionData.success.id;
+                document.getElementById('successDate').textContent = transactionData.success.date;
+            } else {
+                successPage.style.display = 'none';
+                errorPage.style.display = 'block';
+                
+                // Заполняем данные для страницы ошибки
+                document.getElementById('errorAmount').textContent = transactionData.error.amount;
+                document.getElementById('errorId').textContent = transactionData.error.id;
+                document.getElementById('errorReason').textContent = transactionData.error.reason;
+            }
+        }
+
+        // По умолчанию показываем страницу успешной оплаты
+        // Для демонстрации можно переключить на false чтобы увидеть страницу ошибки
+        //showPage(true);
+        
+        // Пример переключения для демонстрации (обычно определяется параметром URL)
+        // Чтобы увидеть страницу ошибки, раскомментируйте следующую строку:
+         showPage(false);
+    </script>
+</body>
+</html>
